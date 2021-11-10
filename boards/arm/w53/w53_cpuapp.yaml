@@ -1,14 +1,15 @@
-identifier: nrf5340dk_nrf5340_cpuapp_ns
-name: NRF5340-DK-NRF5340-application-MCU-Non-Secure
+identifier: w53_cpuapp
+name: W53-application-MCU
 type: mcu
 arch: arm
 toolchain:
   - gnuarmemb
   - xtools
   - zephyr
-ram: 192
-flash: 192
+ram: 448
+flash: 1024
 supported:
+  - gpio
   - i2c
   - pwm
   - watchdog

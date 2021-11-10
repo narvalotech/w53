@@ -9,8 +9,8 @@
 #include "nrf5340_cpuapp_common.dts"
 
 / {
-	model = "Nordic NRF5340 DK NRF5340 Application";
-	compatible = "nordic,nrf5340-dk-nrf5340-cpuapp";
+	model = "NVLTech W53 NRF5340 Application";
+	compatible = "w53-cpuapp";
 
 	chosen {
 		zephyr,sram = &sram0_image;
