@@ -25,12 +25,12 @@
 	};
 };
 
-&spi2 {
+&spi1 {
 	compatible = "nordic,nrf-spim";
 	status = "okay";
-	sck-pin = <47>;
-	miso-pin = <46>;
-	mosi-pin = <45>;
+	sck-pin = <40>;				/* P1.08 */
+	miso-pin = <45>;			/* P1.13 */
+	mosi-pin = <38>;			/* P1.06 */
 };
 
 &usbd {

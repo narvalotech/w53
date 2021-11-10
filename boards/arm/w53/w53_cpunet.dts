@@ -36,12 +36,13 @@
 };
 
 &uart0 {
+	/* Not connected to anything, just here so samples don't freak out. */
 	status = "okay";
 	current-speed = <115200>;
-	tx-pin = <33>;
-	rx-pin = <32>;
-	rts-pin = <11>;
-	cts-pin = <10>;
+	tx-pin = <4>;
+	rx-pin = <5>;
+	rts-pin = <6>;
+	cts-pin = <7>;
 };
 
 &timer0 {

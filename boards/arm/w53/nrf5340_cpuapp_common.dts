@@ -32,20 +32,13 @@
 	status = "okay";
 };
 
-&i2c1 {
-	compatible = "nordic,nrf-twim";
-	status = "okay";
-	sda-pin = <34>;
-	scl-pin = <35>;
-};
-
 &uart0 {
+	/* Not connected to anything.
+	*  Can use GPIOs P1.02 and P0.09 but shared with SW2 and SW3 */
 	status = "okay";
 	current-speed = <115200>;
-	tx-pin = <20>;
-	rx-pin = <22>;
-	rts-pin = <19>;
-	cts-pin = <21>;
+	tx-pin = <14>;
+	rx-pin = <15>;
 };
 
 &pwm0 {
