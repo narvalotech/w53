@@ -1,6 +1,20 @@
 About
 -----
 
+TODO
+----
+
+- remove incompatible sources/drivers
+- compile & fix errors
+- check BLE communication
+- make display driver + DTS
+- make IMU basic driver + DTS
+- add & test USB CDC
+- check power usage & optimize
+- check BLE DFU
+- ...
+- profit !
+
 Hardware
 --------
 
