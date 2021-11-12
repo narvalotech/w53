@@ -20,6 +20,102 @@
 		zephyr,sram-non-secure-partition = &sram0_ns;
 	};
 
+	buttons {
+		compatible = "gpio-keys";
+		button0: button_0 {
+			/* Lower right */
+			gpios = <&gpio0 10 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "SW1 key";
+		};
+		button1: button_1 {
+			/* Upper right */
+			gpios = <&gpio0 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "SW2 key";
+		};
+		button2: button_2 {
+			/* Upper left */
+			gpios = <&gpio1 2 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "SW3 key";
+		};
+	};
+
+	board_inputs {
+		/* TODO: maybe change compatible ? */
+		compatible = "gpio-keys";
+		chg_state: chg_state {
+			gpios = <&gpio0 10 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Battery charging indicator (output from charger)";
+			/* Shared with SW1 */
+		};
+		usb_cc1: usb_cc1 {
+			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+			label = "USB-C CC1 (cable orientation) signal";
+		};
+		imu_irq: imu_irq {
+			gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+			label = "IMU Interrupt signal";
+		};
+	};
+
+	board_outputs {
+		/* TODO: maybe change compatible ? */
+		compatible = "gpio-leds";
+		batmon_en: batmon_en {
+			gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>;
+			label = "Battery volt. divider enable";
+		};
+		periph_en: periph_en {
+			gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+			label = "Peripheral VDD bus enable";
+		};
+		motor: motor {
+			gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
+			label = "Haptics (vibration) driver PWM";
+		};
+		cs_imu: cs_imu {
+			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
+			label = "IMU SPI Chip Select";
+		};
+	};
+
+	lcd_outputs {
+		/* TODO: change compatible once driver exists */
+		compatible = "gpio-leds";
+
+		disp_on: disp_on {
+			gpios = <&gpio0 19 GPIO_ACTIVE_HIGH>;
+			label = "LCD DISP signal";
+		};
+		disp_inv: disp_inv {
+			gpios = <&gpio0 21 GPIO_ACTIVE_HIGH>;
+			label = "LCD EXTCOMIN signal";
+		};
+		disp_led: disp_led {
+			gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
+			label = "Backlight led control";
+		};
+		cs_disp: cs_disp {
+			gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+			label = "LCD SPI Chip Select";
+		};
+	};
+
+	board_pwm {
+		compatible = "pwm-leds";
+		hapt_pwm: hapt_pwm {
+			pwms = <&pwm0 26>;
+			label = "Haptics (vibration) driver PWM";
+		};
+	};
+
+   	vbatt {
+   		compatible = "voltage-divider";
+   		io-channels = <&adc 7>; /* GPIO 0:28 */
+   		output-ohms = <10000>;
+   		full-ohms = <(10000 + 10000)>;
+   		power-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>;
+   	};
+
 	aliases {
 		usbd0 = &usbd;
 	};
