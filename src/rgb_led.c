@@ -29,16 +29,6 @@ void s_bus_init(rgb_led_string_config_t* p_led_config)
     spi_tx_buf.len = (p_led_config->led_num + 2) * 4;
 
     /* Init zephyr spi peripheral */
-    spi = device_get_binding(DT_LABEL(DT_ALIAS(ledspi)));
-    /* if(!spi) { */
-    /*     return -ENODEV; */
-    /* } */
-    spi_cfg.slave = 0;
-    spi_cfg.frequency = 1000000;
-    spi_cfg.operation =
-        SPI_OP_MODE_MASTER
-        | SPI_TRANSFER_MSB
-        | SPI_WORD_SET(8);
 }
 
 void rgb_led_init_gpio(rgb_led_string_config_t* p_led_config)
@@ -51,7 +41,6 @@ void rgb_led_init_gpio(rgb_led_string_config_t* p_led_config)
 void rgb_led_write(rgb_led_string_config_t* p_led_config)
 {
     /* Blocking write */
-    spi_write(spi, &spi_cfg, &spi_tx_buf_set);
 }
 
 void rgb_led_set_global_brightness(rgb_led_string_config_t* p_led_config,

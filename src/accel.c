@@ -10,27 +10,13 @@
 
 static const struct device* sensor;
 static const struct device* sensor_bus;
-#define SENSOR_ADDR (uint8_t)DT_PROP(DT_NODELABEL(accel), reg)
-
 extern struct g_state state;
 
 void acc_app_init(void);
 
 int accel_get_mg(int32_t accel[3])
 {
-	struct sensor_value val[3];
-
-	int rc = sensor_sample_fetch(sensor);
-	if (rc == 0) {
-		rc = sensor_channel_get(sensor,
-					SENSOR_CHAN_ACCEL_XYZ,
-					val);
-		for(int i=0; i<3; i++)
-		{
-			accel[i] = val[i].val1 * 1000 + (val[i].val2 * 0.001);
-		}
-	}
-	return rc;
+	return 0;
 }
 
 int accel_high_latency(bool high)
@@ -42,28 +28,11 @@ int accel_high_latency(bool high)
 		freq.val1 = 50;
 	}
 
-	return sensor_attr_set(sensor,
-			       SENSOR_CHAN_ACCEL_XYZ,
-			       SENSOR_ATTR_SAMPLING_FREQUENCY,
-			       &freq);
+	return 0;
 }
 
 int accel_init(void)
 {
-	/* Need to use pinmux interface to enable sensor VDD because drivers are
-	 * initialized at kernel boot time.
-	 */
-	sensor = device_get_binding(DT_LABEL(DT_NODELABEL(accel)));
-	sensor_bus = device_get_binding(DT_LABEL(DT_BUS(DT_NODELABEL(accel))));
-
-	if (sensor == NULL) {
-		printk("Could not get %s device\n",
-		       DT_LABEL(DT_NODELABEL(accel)));
-		return -1;
-	}
-
-	acc_app_init();
-
 	return 0;
 }
 
@@ -71,39 +40,23 @@ int accel_init(void)
  * TODO: Improve upstream driver someday */
 static uint8_t acc_read_reg(uint8_t reg_addr)
 {
-	uint8_t value = 0;
-
-	i2c_reg_read_byte(sensor_bus,
-			  SENSOR_ADDR,
-			  reg_addr, &value);
-
-	return value;
+	return 0;
 }
 
 static void acc_write_reg(uint8_t reg_addr, uint8_t value)
 {
-	i2c_reg_write_byte(sensor_bus,
-			   SENSOR_ADDR,
-			   reg_addr, value);
 }
 
 static void acc_hpf_config(uint8_t config)
 {
-	acc_write_reg(0x21, config); // Write ctrl_reg2
 }
 
 static void acc_int1_sources(uint8_t sources)
 {
-	sources &= 0xFF; // 8 bits
-
-	acc_write_reg(0x22, sources); // Write register
 }
 
 static void acc_int2_sources(uint8_t sources)
 {
-	sources &= 0xFF; // 8 bits
-
-	acc_write_reg(0x25, sources); // Write register
 }
 
 static void acc_click_set(uint8_t sources, uint16_t threshold,
@@ -218,9 +171,6 @@ static void acc_callback(const struct device *dev,
 		k_wakeup(state.main_tid); /* Wake from sleep */
 }
 
-#define ACC_IRQ1_PIN     DT_GPIO_PIN(DT_NODELABEL(acc_int1), gpios)
-#define ACC_IRQ2_PIN     DT_GPIO_PIN(DT_NODELABEL(acc_int2), gpios)
-
 void acc_app_init(void)
 {
 	/* Enable accelerometer motion app wakeup */
@@ -229,28 +179,6 @@ void acc_app_init(void)
 	// Enable hpf on click only, fc = 1Hz @ fs=50Hz
 	acc_hpf_config(HP_MODE_NORMAL | HPCLICK);
 	acc_enable_click(); // Enable doubleclick detection on Z-axis
-
-	/* Configure interrupt pins */
-	const struct device *gpio_dev;
-	gpio_dev = device_get_binding(DT_GPIO_LABEL(DT_NODELABEL(acc_int1), gpios));
-
-	gpio_pin_interrupt_configure(gpio_dev,
-				     ACC_IRQ1_PIN,
-				     GPIO_INT_EDGE_RISING);
-	gpio_pin_interrupt_configure(gpio_dev,
-				     ACC_IRQ2_PIN,
-				     GPIO_INT_EDGE_RISING);
-	gpio_pin_configure(gpio_dev,
-			   ACC_IRQ1_PIN,
-			   DT_GPIO_FLAGS(DT_NODELABEL(acc_int1), gpios));
-	gpio_pin_configure(gpio_dev,
-			   ACC_IRQ2_PIN,
-			   DT_GPIO_FLAGS(DT_NODELABEL(acc_int2), gpios));
-
-	gpio_init_callback(&acc_cb_data,
-			   acc_callback,
-			   BIT(ACC_IRQ1_PIN) | BIT(ACC_IRQ2_PIN));
-	gpio_add_callback(gpio_dev, &acc_cb_data);
 
 	// Tap-detection interrupt on output 1
 	acc_int1_sources(I1_CLICK);
