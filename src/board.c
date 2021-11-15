@@ -9,15 +9,16 @@
 #include "accel.h"
 #include "motor.h"
 
-#define VDD_CTL_NODE DT_NODELABEL(eio0)
-#define VDD_CTL	     DT_GPIO_PIN(VDD_CTL_NODE, gpios)
 #define SW_0_PIN     DT_GPIO_PIN(DT_ALIAS(sw0), gpios) /* Lower left */
 #define SW_1_PIN     DT_GPIO_PIN(DT_ALIAS(sw1), gpios) /* Lower right */
 #define SW_2_PIN     DT_GPIO_PIN(DT_ALIAS(sw2), gpios) /* Upper right */
 #define BATT_NODE    DT_NODELABEL(batmon_en)
 #define BATT_PIN     DT_GPIO_PIN(BATT_NODE, gpios)
-#define MOTOR_NODE   DT_NODELABEL(hapt_gpio)
+#define MOTOR_NODE   DT_NODELABEL(motor)
 #define MOTOR_PIN    DT_GPIO_PIN(MOTOR_NODE, gpios)
+#define PERIPH_CTL_NODE   DT_NODELABEL(periph_en)
+#define PERIPH_CTL	DT_GPIO_PIN(PERIPH_CTL_NODE, gpios)
+
 #define DEBOUNCE_MS  100
 #define HOLD_MS      1000
 #define PULSE_TIME_US (50*1000)
@@ -216,33 +217,15 @@ void board_gpio_setup(void)
 
 void board_enable_5v(bool enable)
 {
-	const struct device *dev;
-
-	dev = device_get_binding(DT_GPIO_LABEL(VDD_CTL_NODE, gpios));
-
-	gpio_pin_configure(dev, VDD_CTL, GPIO_OUTPUT | DT_GPIO_FLAGS(VDD_CTL_NODE, gpios));
-
-	if(enable)
-	{
-		gpio_pin_set(dev, VDD_CTL, 1);
-		/* Wait for 5V ramp-up */
-		k_msleep(2);
-	}
-	else
-	{
-		gpio_pin_set(dev, VDD_CTL, 0);
-	}
 }
 
-#define SENS_CTL_NODE   DT_NODELABEL(sens_en)
-#define SENS_CTL	DT_GPIO_PIN(SENS_CTL_NODE, gpios)
 void board_enable_vdd_ext(bool enable)
 {
 	const struct device *dev;
 	int ret;
 
-	dev = device_get_binding(DT_GPIO_LABEL(SENS_CTL_NODE, gpios));
-	ret = gpio_pin_configure(dev, SENS_CTL, GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(SENS_CTL_NODE, gpios));
+	dev = device_get_binding(DT_GPIO_LABEL(PERIPH_CTL_NODE, gpios));
+	ret = gpio_pin_configure(dev, PERIPH_CTL, GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(PERIPH_CTL_NODE, gpios));
 
-	gpio_pin_set(dev, SENS_CTL, enable);
+	gpio_pin_set(dev, PERIPH_CTL, enable);
 }
