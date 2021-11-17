@@ -4,8 +4,9 @@ About
 TODO
 ----
 
-- remove incompatible sources/drivers
-- compile & fix errors
+x remove incompatible sources/drivers
+x compile & fix errors
+- boot board
 - check BLE communication
 - make display driver + DTS
 - make IMU basic driver + DTS

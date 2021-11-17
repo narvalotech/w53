@@ -2,14 +2,10 @@
 cmake_minimum_required(VERSION 3.13.1)
 
 list(APPEND BOARD_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
-set(BOARD w53)
+set(BOARD w53_cpuapp)
 
 set(b0_OVERLAY_CONFIG
   ${CMAKE_CURRENT_SOURCE_DIR}/b0.conf
-  )
-
-set(mcuboot_OVERLAY_CONFIG
-  overlay-minimal-external-crypto.conf
   )
 
 set(mcuboot_CONF_FILE
