@@ -72,31 +72,9 @@
 			gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
 			label = "Haptics (vibration) driver PWM";
 		};
-		cs_imu: cs_imu {
-			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
-			label = "IMU SPI Chip Select";
-		};
-	};
-
-	lcd_outputs {
-		/* TODO: change compatible once driver exists */
-		compatible = "gpio-leds";
-
-		disp_on: disp_on {
-			gpios = <&gpio0 19 GPIO_ACTIVE_HIGH>;
-			label = "LCD DISP signal";
-		};
-		disp_inv: disp_inv {
-			gpios = <&gpio0 21 GPIO_ACTIVE_HIGH>;
-			label = "LCD EXTCOMIN signal";
-		};
 		disp_led: disp_led {
 			gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
 			label = "Backlight led control";
-		};
-		cs_disp: cs_disp {
-			gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
-			label = "LCD SPI Chip Select";
 		};
 	};
 
@@ -130,6 +108,21 @@
 	sck-pin = <40>;				/* P1.08 */
 	miso-pin = <45>;			/* P1.13 */
 	mosi-pin = <38>;			/* P1.06 */
+
+	cs-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>, /* Display */
+				<&gpio0 29 GPIO_ACTIVE_LOW>; /* IMU */
+
+	ls0xx@0 {
+		compatible = "sharp,ls0xx";
+		label = "LS013B7DH03";
+		spi-max-frequency = <2000000>;
+		reg = <0>;
+		width = <128>;
+		height = <128>;
+		extcomin-gpios = <&gpio0 21 GPIO_ACTIVE_HIGH>;
+		extcomin-frequency = <60>;
+		disp-en-gpios = <&gpio0 19 GPIO_ACTIVE_HIGH>;
+	};
 };
 
 &usbd {
