@@ -123,6 +123,15 @@
 		extcomin-frequency = <60>;
 		disp-en-gpios = <&gpio0 19 GPIO_ACTIVE_HIGH>;
 	};
+
+	bmx160@1 {
+		/* BMX160 seems to be register-compatible with BMI160 */
+		compatible = "bosch,bmi160";
+		label = "BMX160";
+		reg = <1>;
+		spi-max-frequency = <2000000>;
+		int-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+	};
 };
 
 &usbd {
