@@ -3,6 +3,8 @@
 #include <devicetree.h>
 #include <drivers/gpio.h>
 #include <string.h>
+#include <drivers/display.h>
+#include <lvgl.h>
 #include "rgb_led.h"
 #include "disp.h"
 #include "cts.h"
@@ -28,6 +30,43 @@ rgb_led_string_config_t led_cfg =
 
 struct g_state state;
 
+void display_test()
+{
+	uint32_t count = 0U;
+	char count_str[11] = {0};
+	const struct device *display_dev;
+	lv_obj_t *hello_world_label;
+	lv_obj_t *count_label;
+
+	display_dev = device_get_binding(CONFIG_LVGL_DISPLAY_DEV_NAME);
+
+	if (display_dev == NULL) {
+		printk("device not found.  Aborting test.");
+		return;
+	}
+
+	hello_world_label = lv_label_create(lv_scr_act(), NULL);
+
+	lv_label_set_text(hello_world_label, "Hello world!");
+	lv_obj_align(hello_world_label, NULL, LV_ALIGN_CENTER, 0, 0);
+
+	count_label = lv_label_create(lv_scr_act(), NULL);
+	lv_obj_align(count_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
+
+	lv_task_handler();
+	display_blanking_off(display_dev);
+
+	while (1) {
+		if ((count % 100) == 0U) {
+			sprintf(count_str, "%d", count/100U);
+			lv_label_set_text(count_label, count_str);
+		}
+		lv_task_handler();
+		k_sleep(K_MSEC(10));
+		++count;
+	}
+}
+
 void main(void)
 {
 	/* Reset global state */
@@ -42,33 +81,18 @@ void main(void)
 	struct date_time new_date = {0, 0, 0, 0, 0, 0};
 	cal_set_date(&new_date);
 
-	/* Init accelerometer lib */
-	accel_init();
-
 	board_gpio_setup();
-	board_enable_5v(1);
-
-	rgb_led_init(&led_cfg);
-	display_init();
-	display_mono_set_color(0, 255, 0);
-
-	display_clear();
-	display_animate_slide(0, 50*16);
-
-	display_clear();
-	display_mono_set_color(255, 0, 0);
-	display_string("hello", 0, 50);
+	display_test();
 
 	ble_init();
+
 	/* Advertise by default */
 	ble_adv(1);
 
 	state.pgm_state = PGM_STATE_CLOCK;
+
 	while(1)
 	{
 		main_state_loop();
 	}
-
-	board_enable_5v(0);
-	return;
 }
