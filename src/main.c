@@ -5,7 +5,6 @@
 #include <string.h>
 #include <drivers/display.h>
 #include <lvgl.h>
-#include "rgb_led.h"
 #include "disp.h"
 #include "cts.h"
 #include "calendar.h"
@@ -15,18 +14,6 @@
 #include "state.h"
 #include "screen.h"
 #include "ble.h"
-
-/* Has to be led_num + 2 long to accomodate
-    * start and end words */
-rgb_led_value_t led_data[30];
-rgb_led_string_config_t led_cfg =
-{
-	.p_led_data = led_data,
-	.led_num = 24,
-	.brightness = 1,
-	.pin_data = 0,
-	.pin_clock = 0,
-};
 
 struct g_state state;
 

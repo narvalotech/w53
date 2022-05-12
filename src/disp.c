@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
-#include "rgb_led.h"
 #include "disp.h"
 #include "alphabet.h"
 #include "state.h"
@@ -17,8 +16,6 @@ typedef struct
 
 static uint8_t display[4];
 static uint8_t disp_color[3];
-extern rgb_led_string_config_t led_cfg;
-static rgb_led_string_config_t* p_led_cfg = &led_cfg;
 extern struct g_state state;
 static fade_next_t fade;
 
@@ -59,11 +56,8 @@ void display_init() {
 /* Uses disp_color[] global variable */
 void display_mono_led(uint8_t intensity, uint32_t led_pos)
 {
-	rgb_led_set_led_scale(p_led_cfg,
-			      disp_color[0],
-			      disp_color[1],
-			      disp_color[2],
-			      intensity, led_pos, false);
+	ARG_UNUSED(intensity);
+	ARG_UNUSED(led_pos);
 }
 
 void display_mono_set_color(uint8_t red, uint8_t green, uint8_t blue)
@@ -78,8 +72,6 @@ void display_refresh()
 	uint32_t disp_word = display[0]
 		+ (reverse_bits(display[1], 8) << 8)
 		+ (display[2] << 16);
-
-	rgb_led_set_all(p_led_cfg, 0, 0, 0, false);
 
 	if(fade.pending)
 	{
@@ -98,8 +90,6 @@ void display_refresh()
 			display_mono_led(display[3], i);
 		disp_word >>= 1;
 	}
-
-	rgb_led_write(p_led_cfg);
 }
 
 void display_clear() {
@@ -117,7 +107,6 @@ void display_clear() {
 	}
 	else
 	{
-		rgb_led_set_all(p_led_cfg, 0, 0, 0, true);
 	}
 
 	display[0] = 0;
@@ -128,8 +117,6 @@ void display_clear() {
 void display_write_matrix(uint8_t p_matrix[8][3], bool fade, bool clear_state)
 {
 	static uint8_t active[8][3] = {0};
-
-	rgb_led_set_all(p_led_cfg, 0, 0, 0, false);
 
 	if(clear_state)
 		memset(active, 0, sizeof(active));
@@ -167,8 +154,6 @@ void display_write_matrix(uint8_t p_matrix[8][3], bool fade, bool clear_state)
 		else
 			display_mono_led(p_matrix[j][0], j+16);
 	}
-
-	rgb_led_write(p_led_cfg);
 }
 
 void display_bytes(int top, int mid, int bot, uint16_t time_ms) {

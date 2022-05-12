@@ -12,7 +12,6 @@ set(CMAKE_BUILD_TYPE Release)
 
 set(APP_SRC
   src/main.c
-  src/rgb_led.c
   src/disp.c
   src/clock.c
   src/accel.c
