@@ -7,7 +7,6 @@
 #include <device.h>
 #include <devicetree.h>
 #include <drivers/gpio.h>
-#include "img_mgmt/img_mgmt.h"
 #include "screen.h"
 #include "clock.h"
 #include "disp.h"
@@ -773,23 +772,4 @@ void screen_ble(void)
 	board_enable_5v(1);
 	state_clear();
 	display_clear();
-}
-
-void screen_dfu_end(void)
-{
-	state_clear();
-	board_enable_5v(1);
-	display_clear();
-	display_mono_set_color(0, 0, 255); /* Blue */
-	display_string("dfu ok", 0, SCROLL_SPEED);
-
-	/* Confirm newly-uploaded image */
-	img_mgmt_state_set_pending(1, 1);
-
-	/* Reset to swap and boot image */
-	display_clear();
-	display_animate_slide(0, 50*16);
-	/* Leave more energy for flash swap to succeed */
-	board_enable_5v(0);
-	NVIC_SystemReset();
 }

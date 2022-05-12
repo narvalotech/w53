@@ -4,17 +4,6 @@ cmake_minimum_required(VERSION 3.13.1)
 list(APPEND BOARD_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 set(BOARD w53_cpuapp)
 
-set(b0_OVERLAY_CONFIG
-  ${CMAKE_CURRENT_SOURCE_DIR}/b0.conf
-  )
-
-set(mcuboot_CONF_FILE
-  # Need to define this var instead of using
-  # overlay, because of custom key logic in
-  # NCS mcuboot.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/mcuboot.conf
-  )
-
 find_package(Zephyr HINTS $ENV{ZEPHYR_BASE})
 
 project(rgbwatch)

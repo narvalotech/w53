@@ -12,7 +12,6 @@ x compile & fix errors
 - make IMU basic driver + DTS
 - add & test USB CDC
 - check power usage & optimize
-- check BLE DFU
 - ...
 - profit !
 

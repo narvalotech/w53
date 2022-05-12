@@ -11,10 +11,6 @@
 
 #include <bluetooth/services/lbs.h>
 
-#include "img_mgmt/img_mgmt.h"
-#include "os_mgmt/os_mgmt.h"
-#include <mgmt/mcumgr/smp_bt.h>
-
 #define DEVICE_NAME             CONFIG_BT_DEVICE_NAME
 #define DEVICE_NAME_LEN         (sizeof(DEVICE_NAME) - 1)
 
@@ -196,32 +192,6 @@ static struct bt_conn_auth_cb auth_cb_display = {
 	.pairing_failed = pairing_failed,
 };
 
-void dfu_upload_complete_cb(void)
-{
-	state.pgm_state = PGM_STATE_DFU_END;
-	state.next = 1;
-	state.abort = 1;	/* Maybe this one is not necessary ? */
-	k_wakeup(state.main_tid); /* Wake from sleep */
-}
-
-const img_mgmt_dfu_callbacks_t dfu_callbacks = {
-	.dfu_started_cb = NULL,
-	.dfu_stopped_cb = NULL,
-	.dfu_pending_cb = dfu_upload_complete_cb,
-	.dfu_confirmed_cb = NULL
-};
-
-static int dfu_init(void)
-{
-	/* Define a callback at the end of the image upload */
-	img_mgmt_register_callbacks(&dfu_callbacks);
-	img_mgmt_register_group();
-
-	os_mgmt_register_group();
-	int err = smp_bt_register();
-	return err;
-}
-
 int ble_init(void)
 {
 	int err;
@@ -245,13 +215,6 @@ int ble_init(void)
 		printk("Failed to init LBS (err:%d)\n", err);
 		return err;
 	}
-
-	err = dfu_init();
-	if (err) {
-		printk("Failed to init DFU (err:%d)\n", err);
-		return err;
-	}
-	printk("DFU initialized\n");
 
 	return err;
 }

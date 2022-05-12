@@ -15,6 +15,5 @@ void screen_test_tilt(void);
 void screen_test(void);
 void screen_battery(void);
 void screen_ble(void);
-void screen_dfu_end(void);
 
 #endif
