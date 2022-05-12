@@ -221,11 +221,17 @@ void board_enable_5v(bool enable)
 
 void board_enable_vdd_ext(bool enable)
 {
-	const struct device *dev;
-	int ret;
+	/* const struct device *dev; */
 
-	dev = device_get_binding(DT_GPIO_LABEL(PERIPH_CTL_NODE, gpios));
-	ret = gpio_pin_configure(dev, PERIPH_CTL, GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(PERIPH_CTL_NODE, gpios));
+	/* uint64_t gpio = NRF_DT_GPIOS_TO_PSEL(COEX_NODE, pri_dir_gpios); */
+	/* dev = device_get_binding(DT_GPIO_LABEL(PERIPH_CTL_NODE, gpios)); */
+	/* gpio_pin_configure(dev, */
+	/* 				   PERIPH_CTL, */
+	/* 				   GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(PERIPH_CTL_NODE, gpios)); */
 
-	gpio_pin_set(dev, PERIPH_CTL, enable);
+	/* gpio_pin_set(dev, PERIPH_CTL, enable); */
+
+	/* TODO: use Zephyr API instead */
+	NRF_P0->DIRSET = 1<<13;
+	NRF_P0->OUTSET = 1<<13;
 }
