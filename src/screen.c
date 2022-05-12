@@ -14,7 +14,6 @@
 #include "stopwatch.h"
 #include "accel.h"
 #include "board.h"
-#include "battery.h"
 #include "ble.h"
 #include "motor.h"
 #include "countdown.h"
@@ -678,50 +677,6 @@ void screen_test_tilt(void)
 		display_bytes(display[0], display[1], display[2], 0);
 		k_msleep(100);
 	}
-
-	state_clear();
-	display_clear();
-}
-
-static const struct battery_level_point levels[] = {
-/* See batt sample for explanation */
-	{ 10000, 3950 },
-	{ 625, 3550 },
-	{ 0, 3100 },
-};
-
-void screen_battery(void)
-{
-	/* Display battery level as percent and bargraph */
-	int batt_mv = 0;
-
-	/* Remove load to get more accurate reading */
-	board_enable_5v(0);
-	battery_measure_enable(true);
-	k_msleep(100);
-
-	/* Get batt level */
-	while(!batt_mv && !state.next && !state.main)
-	{
-		batt_mv = battery_sample();
-	}
-	/* Gives weird-ass values */
-	unsigned int batt_percent = battery_level_pptt(batt_mv, levels) / 10;
-	battery_measure_enable(false);
-
-	board_enable_5v(1);
-	display_clear();
-	display_mono_set_color(255, 3, 209); /* Pink */
-	display_string("batt", 0, SCROLL_SPEED);
-	k_msleep(DISP_DELAY);
-
-	/* Display batt level */
-	/* TODO: add bargraph */
-	display_bcd(0, batt_percent, 0, 0);
-
-	/* Wait 5s and exit to next screen */
-	if(!state.next && !state.main)
-		k_sleep(K_SECONDS(5));
 
 	state_clear();
 	display_clear();

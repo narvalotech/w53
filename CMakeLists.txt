@@ -22,7 +22,6 @@ set(APP_SRC
   src/state.c
   src/stopwatch.c
   src/countdown.c
-  src/battery.c
   src/motor.c
   src/ble.c
   src/cts.c
