@@ -188,6 +188,9 @@ static struct bt_conn_auth_cb auth_cb_display = {
 	.passkey_display = auth_passkey_display,
 	.passkey_entry = NULL,
 	.cancel = auth_cancel,
+};
+
+static struct bt_conn_auth_info_cb auth_info_cb_display = {
 	.pairing_complete = pairing_complete,
 	.pairing_failed = pairing_failed,
 };
@@ -197,6 +200,7 @@ int ble_init(void)
 	int err;
 
 	bt_conn_auth_cb_register(&auth_cb_display);
+	bt_conn_auth_info_cb_register(&auth_info_cb_display);
 	bt_conn_cb_register(&conn_callbacks);
 	if (IS_ENABLED(CONFIG_BT_LBS_SECURITY_ENABLED)) {
 		bt_conn_auth_cb_register(&conn_auth_callbacks);

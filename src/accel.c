@@ -8,8 +8,8 @@
 #include "disp.h"
 #include "accel.h"
 
-static const struct device* sensor;
-static const struct device* sensor_bus;
+__UNUSED static const struct device* sensor;
+__UNUSED static const struct device* sensor_bus;
 extern struct g_state state;
 
 void acc_app_init(void);
@@ -162,8 +162,8 @@ static void acc_enable_click(void)
 	acc_write_reg(0x38, TAP_ZD);
 }
 
-static struct gpio_callback acc_cb_data;
-static void acc_callback(const struct device *dev,
+__UNUSED static struct gpio_callback acc_cb_data;
+__UNUSED static void acc_callback(const struct device *dev,
 			 struct gpio_callback *cb,
 			 uint32_t pins)
 {

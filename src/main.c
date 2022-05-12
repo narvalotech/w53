@@ -25,20 +25,20 @@ void display_test()
 	lv_obj_t *hello_world_label;
 	lv_obj_t *count_label;
 
-	display_dev = device_get_binding(CONFIG_LVGL_DISPLAY_DEV_NAME);
+	display_dev = device_get_binding(CONFIG_LV_Z_DISPLAY_DEV_NAME);
 
 	if (display_dev == NULL) {
 		printk("device not found.  Aborting test.");
 		return;
 	}
 
-	hello_world_label = lv_label_create(lv_scr_act(), NULL);
+	hello_world_label = lv_label_create(lv_scr_act());
 
 	lv_label_set_text(hello_world_label, "Hello world!");
-	lv_obj_align(hello_world_label, NULL, LV_ALIGN_CENTER, 0, 0);
+	lv_obj_align(hello_world_label, LV_ALIGN_CENTER, 0, 0);
 
-	count_label = lv_label_create(lv_scr_act(), NULL);
-	lv_obj_align(count_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
+	count_label = lv_label_create(lv_scr_act());
+	lv_obj_align(count_label, LV_ALIGN_BOTTOM_MID, 0, 0);
 
 	lv_task_handler();
 	display_blanking_off(display_dev);

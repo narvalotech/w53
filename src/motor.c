@@ -5,7 +5,7 @@
 #include "motor.h"
 
 #define PWM_MOTOR_NODE DT_NODELABEL(hapt_pwm)
-#define PWM_LABEL DT_PWMS_LABEL(PWM_MOTOR_NODE)
+#define PWM_CTLR DT_PWMS_CTLR(PWM_MOTOR_NODE)
 #define PWM_CHANNEL DT_PWMS_CHANNEL(PWM_MOTOR_NODE)
 #define PWM_FLAGS DT_PWMS_FLAGS(PWM_MOTOR_NODE)
 #define PWM_PERIOD_US (16 * 10)
@@ -83,7 +83,7 @@ static void motor_pulse_work(struct k_work *item)
 
 void motor_init(void)
 {
-	motor = device_get_binding(PWM_LABEL);
+	motor = DEVICE_DT_GET(PWM_CTLR);
 
 	/* Switch off motor */
 	pwm_pin_set_usec(motor, PWM_CHANNEL, PWM_PERIOD_US, 0, PWM_FLAGS);
