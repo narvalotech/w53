@@ -6,10 +6,10 @@ TODO
 
 x remove incompatible sources/drivers
 x compile & fix errors
-- boot board
-- check BLE communication
-- make display driver + DTS
-- make IMU basic driver + DTS
+x boot board
+x check BLE communication
+x make display driver + DTS
+x make IMU basic driver + DTS
 - add & test USB CDC
 - check power usage & optimize
 - ...

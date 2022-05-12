@@ -68,18 +68,25 @@ void main(void)
 	struct date_time new_date = {0, 0, 0, 0, 0, 0};
 	cal_set_date(&new_date);
 
+
 	board_gpio_setup();
+	/* FIXME: will block in here */
 	display_test();
 
+	/* board_enable_vdd_ext(1); */
 	ble_init();
 
-	/* Advertise by default */
+	/* Advertise and sleep */
 	ble_adv(1);
-
-	state.pgm_state = PGM_STATE_CLOCK;
-
-	while(1)
+	for(;;)
 	{
-		main_state_loop();
+		__NOP();
+		k_msleep(1000);
 	}
+	/* state.pgm_state = PGM_STATE_CLOCK; */
+
+	/* while(1) */
+	/* { */
+	/* 	main_state_loop(); */
+	/* } */
 }
