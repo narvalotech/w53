@@ -1,5 +1,6 @@
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 #include <string.h>
+
 #include "stopwatch.h"
 
 static stopwatch_time_t time;

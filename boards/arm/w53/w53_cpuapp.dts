@@ -13,6 +13,7 @@
 	compatible = "w53-cpuapp";
 
 	chosen {
+		zephyr,display = &ls0xx;
 		zephyr,sram = &sram0_image;
 		zephyr,flash = &flash0;
 		zephyr,code-partition = &slot0_partition;
@@ -81,7 +82,7 @@
 	board_pwm {
 		compatible = "pwm-leds";
 		hapt_pwm: hapt_pwm {
-			pwms = <&pwm0 26>;
+			pwms = <&pwm0 26 PWM_MSEC(20) PWM_POLARITY_INVERTED>;
 			label = "Haptics (vibration) driver PWM";
 		};
 	};
@@ -102,6 +103,11 @@
 	};
 };
 
+&pwm0 {
+	status = "okay";
+	ch0-pin = <26>;
+};
+
 &spi1 {
 	compatible = "nordic,nrf-spim";
 	status = "okay";
@@ -112,7 +118,7 @@
 	cs-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>, /* Display */
 				<&gpio0 29 GPIO_ACTIVE_LOW>; /* IMU */
 
-	ls0xx@0 {
+	ls0xx: ls0xx@0 {
 		compatible = "sharp,ls0xx";
 		label = "LS013B7DH03";
 		spi-max-frequency = <2000000>;

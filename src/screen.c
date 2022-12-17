@@ -1,12 +1,14 @@
-#include <zephyr.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
+#include <zephyr/drivers/gpio.h>
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
-#include <device.h>
-#include <devicetree.h>
-#include <drivers/gpio.h>
+
 #include "screen.h"
 #include "clock.h"
 #include "disp.h"

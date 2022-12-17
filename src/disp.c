@@ -1,7 +1,9 @@
-#include <zephyr.h>
+#include <zephyr/kernel.h>
+
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
+
 #include "disp.h"
 #include "alphabet.h"
 #include "state.h"

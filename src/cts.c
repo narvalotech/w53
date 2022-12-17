@@ -8,22 +8,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <kernel.h>
-#include <init.h>
-#include <stdbool.h>
+#include <zephyr/kernel.h>
+#include <zephyr/init.h>
 #include <zephyr/types.h>
 
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/conn.h>
-#include <bluetooth/gatt.h>
-#include <bluetooth/uuid.h>
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/conn.h>
+#include <zephyr/bluetooth/gatt.h>
+#include <zephyr/bluetooth/uuid.h>
+
+#include <stdbool.h>
 
 #include "cts.h"
 #include "clock.h"
 #include "calendar.h"
 
 #define LOG_LEVEL CONFIG_BT_CTS_LOG_LEVEL
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(cts);
 
 #define CTS_NOTIFY_STACK_SIZE 500

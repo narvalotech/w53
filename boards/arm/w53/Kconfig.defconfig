@@ -75,7 +75,20 @@ config USB_DEVICE_STACK
 
 endif # BOARD_W53_CPUAPP && USB
 
+config IPM_NRFX
+	default IPM
+
+choice BT_HCI_BUS_TYPE
+	default BT_RPMSG if BT
+endchoice
+
+config HEAP_MEM_POOL_SIZE
+	default 4096 if BT_RPMSG
+
 endif # BOARD_W53_CPUAPP
+
+config MBOX_NRFX_IPC
+	default MBOX
 
 config BOARD
 	default "w53_cpunet" if BOARD_W53_CPUNET

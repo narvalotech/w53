@@ -1,7 +1,8 @@
-#include <zephyr.h>
-#include <device.h>
-#include <devicetree.h>
-#include <drivers/gpio.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
+#include <zephyr/drivers/gpio.h>
+
 #include "board.h"
 #include "state.h"
 #include "disp.h"
@@ -9,9 +10,9 @@
 #include "accel.h"
 #include "motor.h"
 
-#define SW_0_PIN     DT_GPIO_PIN(DT_ALIAS(sw0), gpios) /* Lower left */
-#define SW_1_PIN     DT_GPIO_PIN(DT_ALIAS(sw1), gpios) /* Lower right */
-#define SW_2_PIN     DT_GPIO_PIN(DT_ALIAS(sw2), gpios) /* Upper right */
+#define SW_0_PIN     DT_PHA(DT_ALIAS(sw0), gpios, pin) /* Lower left */
+#define SW_1_PIN     DT_PHA(DT_ALIAS(sw1), gpios, pin) /* Lower right */
+#define SW_2_PIN     DT_PHA(DT_ALIAS(sw2), gpios, pin) /* Upper right */
 #define BATT_NODE    DT_NODELABEL(batmon_en)
 #define BATT_PIN     DT_GPIO_PIN(BATT_NODE, gpios)
 #define MOTOR_NODE   DT_NODELABEL(motor)
@@ -114,7 +115,8 @@ static void button_timer_callback(struct k_timer *timer_id)
 	const struct device *dev;
 
 	/* All pushbuttons are on the same port */
-	dev = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(sw0), gpios));
+
+	dev = DEVICE_DT_GET(DT_PHANDLE(DT_ALIAS(sw0), gpios));
 	gpio_port_get(dev, &port_val);
 
 	if(pb_state == START) {
@@ -152,11 +154,11 @@ static struct gpio_callback button_cb_data;
 static void setup_buttons(void)
 {
 	const struct device *button;
-	button = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(sw0), gpios));
+	button = DEVICE_DT_GET(DT_PHANDLE(DT_ALIAS(sw0), gpios));
 
 	gpio_pin_configure(button,
 			   SW_0_PIN,
-			   DT_GPIO_FLAGS(DT_ALIAS(sw0), gpios));
+			   DT_PHA(DT_ALIAS(sw0), gpios, flags));
 
 	gpio_pin_interrupt_configure(button,
 				     SW_0_PIN,
@@ -164,7 +166,7 @@ static void setup_buttons(void)
 
 	gpio_pin_configure(button,
 			   SW_1_PIN,
-			   DT_GPIO_FLAGS(DT_ALIAS(sw1), gpios));
+			   DT_PHA(DT_ALIAS(sw1), gpios, flags));
 
 	gpio_pin_interrupt_configure(button,
 				     SW_1_PIN,
@@ -172,7 +174,7 @@ static void setup_buttons(void)
 
 	gpio_pin_configure(button,
 			   SW_2_PIN,
-			   DT_GPIO_FLAGS(DT_ALIAS(sw2), gpios));
+			   DT_PHA(DT_ALIAS(sw2), gpios, flags));
 
 	gpio_pin_interrupt_configure(button,
 				     SW_2_PIN,
@@ -189,9 +191,9 @@ static void setup_batt(void)
 {
 	const struct device *batt;
 
-	batt = device_get_binding(DT_GPIO_LABEL(BATT_NODE, gpios));
+	batt = DEVICE_DT_GET(DT_PHANDLE(BATT_NODE, gpios));
 	gpio_pin_configure(batt, BATT_PIN,
-			   GPIO_OUTPUT | DT_GPIO_FLAGS(BATT_NODE, gpios));
+			   GPIO_OUTPUT | DT_PHA(BATT_NODE, gpios, flags));
 	gpio_pin_set(batt, BATT_PIN, 0);
 }
 
@@ -199,9 +201,9 @@ static void setup_motor(void)
 {
 	const struct device *motor;
 
-	motor = device_get_binding(DT_GPIO_LABEL(MOTOR_NODE, gpios));
+	motor = DEVICE_DT_GET(DT_PHANDLE(MOTOR_NODE, gpios));
 	gpio_pin_configure(motor, MOTOR_PIN,
-			   GPIO_OUTPUT | DT_GPIO_FLAGS(MOTOR_NODE, gpios));
+			   GPIO_OUTPUT | DT_PHA(MOTOR_NODE, gpios, flags));
 	gpio_pin_set(motor, MOTOR_PIN, 0);
 
 	/* Setup PWM after setting up GPIO fallback */

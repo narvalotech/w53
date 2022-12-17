@@ -1,6 +1,8 @@
-#include <zephyr.h>
-#include <init.h>
+#include <zephyr/kernel.h>
+#include <zephyr/init.h>
+
 #include <string.h>
+
 #include "clock.h"		/* For time_struct_t */
 #include "motor.h"
 #include "countdown.h"

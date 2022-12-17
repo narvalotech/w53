@@ -1,10 +1,12 @@
-#include <zephyr.h>
-#include <device.h>
-#include <devicetree.h>
-#include <drivers/gpio.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
+#include <zephyr/drivers/gpio.h>
+#include <zephyr/drivers/display.h>
+
 #include <string.h>
-#include <drivers/display.h>
 #include <lvgl.h>
+
 #include "disp.h"
 #include "cts.h"
 #include "calendar.h"
@@ -25,7 +27,7 @@ void display_test()
 	lv_obj_t *hello_world_label;
 	lv_obj_t *count_label;
 
-	display_dev = device_get_binding(CONFIG_LV_Z_DISPLAY_DEV_NAME);
+	display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
 
 	if (display_dev == NULL) {
 		printk("device not found.  Aborting test.");

@@ -1,8 +1,9 @@
-#include <zephyr.h>
-#include <device.h>
-#include <init.h>
-#include <devicetree.h>
-#include <drivers/gpio.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/init.h>
+#include <zephyr/devicetree.h>
+#include <zephyr/drivers/gpio.h>
+
 #include "board.h"
 
 static int pinmux_w53_init(const struct device *port)

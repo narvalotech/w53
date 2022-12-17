@@ -1,6 +1,8 @@
-#include <zephyr.h>
+#include <zephyr/kernel.h>
+#include <zephyr/init.h>
+
 #include <string.h>
-#include <init.h>
+
 #include "calendar.h"
 #include "clock.h"
 #include "motor.h"

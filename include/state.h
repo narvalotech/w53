@@ -1,9 +1,10 @@
 #ifndef __STATE_H_
 #define __STATE_H_
 
+#include <zephyr/kernel.h>
+
 #include <stdbool.h>
 #include <stdint.h>
-#include <kernel.h>
 
 typedef enum {
 	PGM_STATE_TEST_TILT,

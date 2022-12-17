@@ -1,15 +1,16 @@
-#include <zephyr.h>
-#include <device.h>
-#include <devicetree.h>
-#include <drivers/pwm.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
+#include <zephyr/drivers/pwm.h>
+
 #include "motor.h"
 
 #define PWM_MOTOR_NODE DT_NODELABEL(hapt_pwm)
 #define PWM_CTLR DT_PWMS_CTLR(PWM_MOTOR_NODE)
 #define PWM_CHANNEL DT_PWMS_CHANNEL(PWM_MOTOR_NODE)
 #define PWM_FLAGS DT_PWMS_FLAGS(PWM_MOTOR_NODE)
-#define PWM_PERIOD_US (16 * 10)
-#define PWM_PULSE_US (PWM_PERIOD_US / 2)
+#define PWM_PERIOD_US PWM_USEC((16 * 10))
+#define PWM_PULSE_US PWM_USEC((PWM_PERIOD_US / 2))
 
 typedef enum {
 	STOP = 0,
@@ -29,9 +30,9 @@ struct k_timer motor_timer;
 
 static void motor_set_duty(uint32_t duty)
 {
-	pwm_pin_set_usec(motor, PWM_CHANNEL,
-			 PWM_PERIOD_US, (duty * PWM_PERIOD_US) / 100,
-			 PWM_FLAGS);
+	pwm_set(motor, PWM_CHANNEL,
+			PWM_PERIOD_US, (duty * PWM_PERIOD_US) / 100,
+			PWM_FLAGS);
 }
 
 static void motor_timer_callback(struct k_timer *timer_id)
@@ -86,7 +87,7 @@ void motor_init(void)
 	motor = DEVICE_DT_GET(PWM_CTLR);
 
 	/* Switch off motor */
-	pwm_pin_set_usec(motor, PWM_CHANNEL, PWM_PERIOD_US, 0, PWM_FLAGS);
+	pwm_set(motor, PWM_CHANNEL, PWM_PERIOD_US, 0, PWM_FLAGS);
 
 	k_work_init(&motor_work, motor_pulse_work);
 }
@@ -103,11 +104,11 @@ void motor_pulse_single(uint32_t time_us, uint32_t cycles)
 	for(; cycles > 0; cycles--)
 	{
 		/* Switch on a defined intensity */
-		pwm_pin_set_usec(motor, PWM_CHANNEL, PWM_PERIOD_US, PWM_PULSE_US, PWM_FLAGS);
+		pwm_set(motor, PWM_CHANNEL, PWM_PERIOD_US, PWM_PULSE_US, PWM_FLAGS);
 		/* Wait a bit */
 		k_busy_wait(time_us / 2);
 		/* Switch off */
-		pwm_pin_set_usec(motor, PWM_CHANNEL, PWM_PERIOD_US, 0, PWM_FLAGS);
+		pwm_set(motor, PWM_CHANNEL, PWM_PERIOD_US, 0, PWM_FLAGS);
 		/* Wait a bit */
 		if(cycles>1)
 			k_busy_wait(time_us / 2);
@@ -118,7 +119,7 @@ void motor_off(void)
 {
 	k_timer_stop(&motor_timer);
 	motor_state = STOP;
-	pwm_pin_set_usec(motor, PWM_CHANNEL, PWM_PERIOD_US, 0, PWM_FLAGS);
+	pwm_set(motor, PWM_CHANNEL, PWM_PERIOD_US, 0, PWM_FLAGS);
 }
 
 void motor_loop(uint32_t loop_time_ms, bool start_timer)

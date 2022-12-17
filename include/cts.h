@@ -7,8 +7,9 @@
 #ifndef __CTS_H_
 #define __CTS_H_
 
-#include <stdbool.h>
 #include <zephyr/types.h>
+
+#include <stdbool.h>
 
 /* Need to pack the structs to be compatible with bluetooth spec */
 #ifndef __PACKED
